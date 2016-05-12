@@ -17,6 +17,11 @@ class IISH extends AbstractCover implements ResizableCover, AccessClosedCover {
     private $accessToken;
 
     /**
+     * @var string
+     */
+    private $url;
+
+    /**
      * Constructor.
      *
      * @param Config $iishConfig The IISH configuration.
@@ -25,6 +30,9 @@ class IISH extends AbstractCover implements ResizableCover, AccessClosedCover {
         // Obtain the content access token
         $contentAccessToken = new IISHContentAccessToken($iishConfig);
         $this->accessToken = $contentAccessToken->getAccessToken();
+        $this->url = isset($iishConfig->SOR->url)
+            ? $iishConfig->SOR->url
+            : 'http://hdl.handle.net';
     }
 
     /**
@@ -61,7 +69,7 @@ class IISH extends AbstractCover implements ResizableCover, AccessClosedCover {
             $accessTokenURL = '&urlappend=?access_token=' . $this->accessToken;
         }
 
-        return 'http://hdl.handle.net/10622/' . $ids['pid'] . '?locatt=view:' . $imageIndex . $accessTokenURL;
+        return $this->url . '/' . $ids['pid'] . '?locatt=view:' . $imageIndex . $accessTokenURL;
     }
 
     /**
